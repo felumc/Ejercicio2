@@ -10,8 +10,7 @@ hostLalo = '175.1.32.222'
 hostRobert = '175.1.33.190'
 hostLuis = '175.1.35.38'
 
-def send_file(file_path):
-    host = '175.1.36.225'  # Replace with the IP address of the receiving Mac
+def send_file(host, file_path):  # Replace with the IP address of the receiving Mac
     port = 12345  # Use the same port number as in the server
 
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -30,4 +29,4 @@ def send_file(file_path):
     client_socket.close()
 
 
-send_file(hostLalo, 'lalo.txt')
+send_file(hostHendrick, 'hendrick.txt')
