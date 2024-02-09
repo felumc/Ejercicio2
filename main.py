@@ -74,14 +74,14 @@ def send_file(host, file_name):
     print(f"File {file_name} sent successfully")
     client_socket.close()
 
-#open the threads to receive and send files
-if __name__ == "__main__":
-    receive_thread = threading.Thread(target=receive_file)
-    receive_thread.start()
 
-    send_file(hostHendrick, 'hendrick.txt')
-    send_file(hostLalo, 'lalo.txt')
-    send_file(hostRobert, 'robert.txt')
-    send_file(hostLuis, 'luis.txt')
+receive_thread = threading.Thread(target=receive_file)
+receive_thread.start()
 
-    receive_thread.join()
+mandar = int(input("Press Enter to send file"))
+send_file(hostHendrick, 'hendrick.txt')
+send_file(hostLalo, 'lalo.txt')
+send_file(hostRobert, 'robert.txt')
+send_file(hostLuis, 'luis.txt')
+
+receive_thread.join()
