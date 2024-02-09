@@ -11,8 +11,7 @@ hostRobert = '175.1.33.190'
 hostLuis = '175.1.35.38'
 
 #open my socket to receive files non stop
-def receive_file():
-    host = '175.1.35.38'
+def receive_file(host):
     port = 12345
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -75,7 +74,7 @@ def send_file(host, file_name):
     client_socket.close()
 
 
-receive_thread = threading.Thread(target=receive_file)
+receive_thread = threading.Thread(target=receive_file(hostLuis))
 receive_thread.start()
 
 mandar = int(input("Press Enter to send file"))
