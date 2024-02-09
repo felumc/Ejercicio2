@@ -1,7 +1,12 @@
 import socket
 
-def receive_file():
-    host = '175.1.45.80'  # Replace with the IP address of the receiving Mac
+
+hostHendrick = '175.1.36.225'
+hostLalo = '175.1.32.222'
+hostRobert = '175.1.33.190'
+hostLuis = '175.1.35.38'
+
+def receive_file(host): # Replace with the IP address of the receiving Mac
     port = 12345  # Choose a port number
 
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -39,4 +44,4 @@ def receive_file():
         conn.close()
 
 if __name__ == "__main__":
-    receive_file()
+    receive_file(hostLuis)
