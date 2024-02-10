@@ -28,10 +28,16 @@ def send_file(host, file_path):  # Replace with the IP address of the receiving 
     print("File sent successfully")
     client_socket.close()
 
-def send_All(file):
-    for i in hostList:
-        send_file(i, file)
 
 if __name__ == "__main__":
     file_name = input("filename: ")
-    send_All(file_name)
+    threadList = []
+    for host in hostList:
+        thread = threading.Thread(target=send_file, args=(host, file_name))
+        threadList.append(thread)
+        thread.start()
+    for thread in threadList:
+        thread.join()
+    print("All files sent successfully")
+
+    
