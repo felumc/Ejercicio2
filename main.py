@@ -28,5 +28,10 @@ def send_file(host, file_path):  # Replace with the IP address of the receiving 
     print("File sent successfully")
     client_socket.close()
 
-for i in hostList:
-    send_file(i, 'hendrick.txt')
+def send_All(file):
+    for i in hostList:
+        send_file(i, file)
+
+if __name__ == "__main__":
+    file_name = input("filename: ")
+    send_All(file_name)
