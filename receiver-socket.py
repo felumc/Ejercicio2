@@ -1,7 +1,7 @@
 import socket
 
 
-hostHendrick = '175.1.36.225'
+hostHendrick = '175.1.37.112'
 hostLalo = '175.1.42.68'
 hostRobert = '175.1.35.197'
 hostLuis = '175.1.35.211'

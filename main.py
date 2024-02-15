@@ -4,8 +4,8 @@ import socket
 import os
 
 # Read the content of the files
-hostList = ['175.1.36.225', '175.1.32.222', '175.1.33.190']
-hostHendrick = '175.1.36.225'
+hostList = ['175.1.37.112', '175.1.32.222', '175.1.33.190']
+hostHendrick = '175.1.37.112'
 hostLalo = '175.1.42.68'
 hostRobert = '175.1.35.197'
 hostLuis = '175.1.35.211'
