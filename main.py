@@ -4,11 +4,11 @@ import socket
 import os
 
 # Read the content of the files
-hostList = ['175.1.36.225', '175.1.32.222', '175.1.33.190', '175.1.35.38']
+hostList = ['175.1.36.225', '175.1.32.222', '175.1.33.190']
 hostHendrick = '175.1.36.225'
 hostLalo = '175.1.32.222'
 hostRobert = '175.1.33.190'
-hostLuis = '175.1.35.38'
+hostLuis = '175.1.35.211'
 
 def send_file(host, file_path):  # Replace with the IP address of the receiving Mac
     port = 12345  # Use the same port number as in the server
