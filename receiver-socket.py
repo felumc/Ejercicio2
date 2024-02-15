@@ -4,7 +4,7 @@ import socket
 hostHendrick = '175.1.36.225'
 hostLalo = '175.1.32.222'
 hostRobert = '175.1.33.190'
-hostLuis = '175.1.35.38'
+hostLuis = '175.1.35.211'
 
 def receive_file(host): # Replace with the IP address of the receiving Mac
     port = 12345  # Choose a port number
