@@ -3,7 +3,7 @@ import socket
 
 hostHendrick = '175.1.37.112'
 hostLalo = '175.1.42.68'
-hostRobert = '175.1.35.197'
+hostRobert = '175.1.46.120'
 hostLuis = '175.1.35.211'
 
 def receive_file(host):
@@ -28,7 +28,7 @@ def receive_file(host):
             file_name = file_name.decode('utf-8', errors='replace').strip()
             extension = os.path.splitext(file_name)[1].lower()
 
-            if extension in ['.mp4', '.avi', '.mkv', '.mov', '.heic', '.jpg', '.png', '.gif']:
+            if extension in ['.mp4', '.avi', '.mkv', '.MOV', '.heic', '.jpg', '.png', '.gif', '.mp3']:
                 folder = 'mutimedia'
             else:
                 folder = 'datos'
