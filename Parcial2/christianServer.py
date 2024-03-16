@@ -8,6 +8,7 @@ def handle_client_connection(client_socket):
     
     # Send back the current server time
     current_time = str(time.time())
+    print(f"Sending current time: {current_time}")
     client_socket.sendall(current_time.encode('utf-8'))
     client_socket.close()
 

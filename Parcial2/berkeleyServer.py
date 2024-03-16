@@ -1,17 +1,20 @@
 import socket
 import threading
 import time
+from datetime import datetime
 
 def get_time_difference(client_time):
     return time.time() - client_time
 
-def handle_client(client_socket, addr):
+def handle_client(client_socket, client_address):
     client_time = float(client_socket.recv(1024))
-    print(f"Received time {client_time} from client {addr}")
-
+    current_time = time.time()
     time_diff = get_time_difference(client_time)
-    adjusted_time = client_time + time_diff
-    print(f"Sending adjusted time {adjusted_time} to client {addr}")
+    adjusted_time = current_time + time_diff
+
+    print(f"Client {client_address} Time: {datetime.fromtimestamp(client_time)}")
+    print(f"Current Server Time: {datetime.fromtimestamp(current_time)}")
+    print(f"Adjusted Time for Client: {datetime.fromtimestamp(adjusted_time)}")
 
     client_socket.sendall(str(time_diff).encode())
     client_socket.close()
