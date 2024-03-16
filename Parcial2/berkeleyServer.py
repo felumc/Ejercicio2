@@ -5,9 +5,14 @@ import time
 def get_time_difference(client_time):
     return time.time() - client_time
 
-def handle_client(client_socket):
+def handle_client(client_socket, addr):
     client_time = float(client_socket.recv(1024))
+    print(f"Received time {client_time} from client {addr}")
+
     time_diff = get_time_difference(client_time)
+    adjusted_time = client_time + time_diff
+    print(f"Sending adjusted time {adjusted_time} to client {addr}")
+
     client_socket.sendall(str(time_diff).encode())
     client_socket.close()
 
@@ -19,7 +24,7 @@ def start_server(host, port):
 
     while True:
         client, addr = server_socket.accept()
-        threading.Thread(target=handle_client, args=(client,)).start()
+        threading.Thread(target=handle_client, args=(client, addr)).start()
 
 if __name__ == "__main__":
     start_server('0.0.0.0', 12345)
