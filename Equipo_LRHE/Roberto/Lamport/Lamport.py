@@ -18,6 +18,15 @@ def manejar_cliente(cliente_socket, cliente_direccion):
         cliente_socket.send(mensaje_con_tiempo)
         print(f"Mensaje enviado a {cliente_direccion}: {mensaje} (marca de tiempo: {marca_tiempo})")
 
+def enviar_mensaje(servidor_socket, mensaje):
+    global marca_tiempo_servidor
+    # Incrementar la marca de tiempo del servidor
+    marca_tiempo_servidor += 1
+    marca_tiempo = marca_tiempo_servidor
+    # Enviar el mensaje junto con la marca de tiempo
+    mensaje_con_tiempo = f"{mensaje}:{marca_tiempo}".encode()
+    servidor_socket.send(mensaje_con_tiempo)
+
 def main():
     # Dirección y puerto del servidor
     host = '127.0.0.1'
@@ -38,6 +47,11 @@ def main():
             # Iniciar un hilo para manejar la conexión con el cliente
             cliente_thread = threading.Thread(target=manejar_cliente, args=(cliente_socket, cliente_direccion))
             cliente_thread.start()
+
+            # Enviar algunos mensajes al cliente
+            for i in range(5):
+                time.sleep(1)
+                enviar_mensaje(cliente_socket, f"Respuesta {i+1}")
 
 if __name__ == "__main__":
     main()
