@@ -1,7 +1,6 @@
 import socket
 import time
 from threading import Thread
-from datetime import datetime
 
 def handle_client_connection(client_socket):
     # Receive the request (not used in this simple example)
@@ -9,7 +8,6 @@ def handle_client_connection(client_socket):
     
     # Send back the current server time
     current_time = str(time.time())
-    print(f"Sending current time: {datetime.fromtimestamp(float(current_time))}")
     client_socket.sendall(current_time.encode('utf-8'))
     client_socket.close()
 
@@ -28,5 +26,5 @@ def start_server(host, port):
         client_handler.start()
 
 if __name__ == "__main__":
-    HOST, PORT = "0.0.0.0", 12344
+    HOST, PORT = "0.0.0.0", 12345
     start_server(HOST, PORT)
