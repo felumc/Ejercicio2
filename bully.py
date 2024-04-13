@@ -9,11 +9,13 @@ class BullyNode:
         self.nodes_info = nodes_info  # Dictionary of node_id: port
         self.coordinator = None
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.socket.bind(('', port))
+        self.socket.bind(('', self.port))
         self.alive = True
 
-    def send_message(self, message, port):
-        self.socket.sendto(message.encode(), ('localhost', port))
+    def send_message(self, message, node_id):
+        ip, port = self.nodes_info[node_id]
+        self.socket.sendto(message.encode(), (ip, port))
+
 
     def receive_message(self):
         while self.alive:
@@ -54,9 +56,13 @@ class BullyNode:
         threading.Thread(target=self.receive_message).start()
 
 def main():
-    nodes_info = {1: 5001, 2: 5002, 3: 5003}
+    nodes_info = {
+    1: ('175.1.44.145', 5001),
+    2: ('175.1.49.170', 5002),
+    3: ('192.168.1.12', 5003)
+}
     node_id = int(input("Enter this node's ID (1, 2, or 3): "))
-    node = BullyNode(node_id, nodes_info[node_id], nodes_info)
+    node = BullyNode(node_id, nodes_info[node_id][1], nodes_info)  # nodes_info[node_id][1] is the port
     node.run()
 
     while True:
