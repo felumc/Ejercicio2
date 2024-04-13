@@ -59,9 +59,10 @@ def main():
     nodes_info = {
     1: ('175.1.44.145', 5001),
     2: ('175.1.49.170', 5002),
-    3: ('192.168.1.12', 5003)
+    3: ('175.1.42.196', 5003),
+    4: ('175.1.40.32', 5004)
 }
-    node_id = int(input("Enter this node's ID (1, 2, or 3): "))
+    node_id = int(input("Enter this node's ID (1, 2, 3 or 4): "))
     node = BullyNode(node_id, nodes_info[node_id][1], nodes_info)  # nodes_info[node_id][1] is the port
     node.run()
 
