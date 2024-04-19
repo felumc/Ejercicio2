@@ -1,66 +1,127 @@
+# Programa Python para crear una cadena de bloques (Blockchain)
+
+# Importar datetime para generar marcas temporales de los bloques
+import datetime
+
+# Importar hashlib para realizar operaciones de hash y así garantizar la integridad de los bloques
 import hashlib
-import time
-from flask import Flask, jsonify, request
 
-class Block:
-    def __init__(self, index, timestamp, data, previous_hash):
-        self.index = index
-        self.timestamp = timestamp
-        self.data = data
-        self.previous_hash = previous_hash
-        self.hash = self.calculate_hash()
+# Importar json para facilitar el almacenamiento y la manipulación de la estructura de los bloques
+import json
 
-    def calculate_hash(self):
-        block_string = f"{self.index}{self.timestamp}{self.data}{self.previous_hash}"
-        return hashlib.sha256(block_string.encode()).hexdigest()
+# Importar Flask para crear la aplicación web y jsonify para formatear la respuesta como JSON
+from flask import Flask, jsonify
 
 class Blockchain:
+
+    # Constructor para inicializar la cadena de bloques
+    # Crea el bloque génesis y establece su hash a "0"
     def __init__(self):
-        self.chain = [self.create_genesis_block()]
-        self.nodes = set()
+        self.chain = []
+        self.create_block(proof=1, previous_hash='0')
 
-    def create_genesis_block(self):
-        return Block(0, time.time(), "Genesis Block", "0")
+    # Función para crear un nuevo bloque en la cadena
+    # Requiere una prueba de trabajo y el hash del bloque anterior
+    def create_block(self, proof, previous_hash):
+        block = {
+            'index': len(self.chain) + 1,
+            'timestamp': str(datetime.datetime.now()),
+            'proof': proof,
+            'previous_hash': previous_hash
+        }
+        self.chain.append(block)
+        return block
 
-    def add_block(self, new_block):
-        new_block.previous_hash = self.last_block.hash
-        new_block.hash = new_block.calculate_hash()
-        self.chain.append(new_block)
-
-    def is_chain_valid(self):
-        for i in range(1, len(self.chain)):
-            current = self.chain[i]
-            previous = self.chain[i - 1]
-            if current.hash != current.calculate_hash() or current.previous_hash != previous.hash:
-                return False
-        return True
-
-    @property
-    def last_block(self):
+    # Función para obtener el último bloque de la cadena
+    def print_previous_block(self):
         return self.chain[-1]
 
+    # Función para realizar la prueba de trabajo (Proof of Work)
+    # Encuentra un número que resuelva el problema definido y así minar un nuevo bloque
+    def proof_of_work(self, previous_proof):
+        new_proof = 1
+        check_proof = False
+        while check_proof is False:
+            hash_operation = hashlib.sha256(
+                str(new_proof**2 - previous_proof**2).encode()).hexdigest()
+            if hash_operation[:5] == '00000':
+                check_proof = True
+            else:
+                new_proof += 1
+        return new_proof
+
+    # Función para calcular el hash de un bloque
+    def hash(self, block):
+        encoded_block = json.dumps(block, sort_keys=True).encode()
+        return hashlib.sha256(encoded_block).hexdigest()
+
+    # Función para verificar la integridad de la cadena
+    # Comprueba que los enlaces entre bloques sean correctos y que las pruebas de trabajo sean válidas
+    def chain_valid(self, chain):
+        previous_block = chain[0]
+        block_index = 1
+
+        while block_index < len(chain):
+            block = chain[block_index]
+            if block['previous_hash'] != self.hash(previous_block):
+                return False
+
+            previous_proof = previous_block['proof']
+            proof = block['proof']
+            hash_operation = hashlib.sha256(
+                str(proof**2 - previous_proof**2).encode()).hexdigest()
+
+            if hash_operation[:5] != '00000':
+                return False
+            previous_block = block
+            block_index += 1
+
+        return True
+
+# Inicializar Flask
 app = Flask(__name__)
+
+# Instancia de la clase Blockchain
 blockchain = Blockchain()
 
-@app.route('/add_block', methods=['POST'])
-def add_block():
-    data = request.json['data']
-    new_block = Block(blockchain.last_block.index + 1, time.time(), data, blockchain.last_block.hash)
-    blockchain.add_block(new_block)
-    return jsonify({'message': 'Block added', 'block_index': new_block.index}), 200
+# Ruta para minar un nuevo bloque
+@app.route('/mine_block', methods=['GET'])
+def mine_block():
+    previous_block = blockchain.print_previous_block()
+    previous_proof = previous_block['proof']
+    proof = blockchain.proof_of_work(previous_proof)
+    previous_hash = blockchain.hash(previous_block)
+    block = blockchain.create_block(proof, previous_hash)
 
-@app.route('/chain', methods=['GET'])
-def get_chain():
-    chain_data = []
-    for block in blockchain.chain:
-        chain_data.append({
-            'index': block.index,
-            'timestamp': block.timestamp,
-            'data': block.data,
-            'previous_hash': block.previous_hash,
-            'hash': block.hash
-        })
-    return jsonify(chain_data), 200
+    response = {
+        'message': 'Un bloque ha sido MINADO',
+        'index': block['index'],
+        'timestamp': block['timestamp'],
+        'proof': block['proof'],
+        'previous_hash': block['previous_hash']
+    }
 
-if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    return jsonify(response), 200
+
+# Ruta para obtener la cadena completa
+@app.route('/get_chain', methods=['GET'])
+def display_chain():
+    response = {
+        'chain': blockchain.chain,
+        'length': len(blockchain.chain)
+    }
+    return jsonify(response), 200
+
+# Ruta para verificar la validez de la cadena de bloques
+@app.route('/valid', methods=['GET'])
+def valid():
+    valid = blockchain.chain_valid(blockchain.chain)
+
+    if valid:
+        response = {'message': 'El Blockchain es válido.'}
+    else:
+        response = {'message': 'El Blockchain no es válido.'}
+    return jsonify(response), 200
+
+# Ejecutar el servidor Flask localmente
+app.run(host='127.0.0.1', port=5000)
