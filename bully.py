@@ -58,15 +58,15 @@ def main():
         3: ('175.1.52.176', 5003),
         4: ('175.1.51.86', 5004)
     }
-    node_id = int(input("Enter this node's ID (1, 2, 3 or 4): "))
+    node_id = int(input("(1, 2, 3 or 4): "))
     node = BullyNode(node_id, nodes_info[node_id][1], nodes_info)
     node.run()
 
     while True:
-        cmd = input("Enter 'start' to initiate an election or 'exit' to quit: ")
-        if cmd == 'start':
+        cmd = input("iniciar o salir: ")
+        if cmd == 'iniciar':
             node.start_election()
-        elif cmd == 'exit':
+        elif cmd == 'salir':
             node.alive = False
             break
 
